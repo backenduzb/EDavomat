@@ -10,7 +10,7 @@ class Command(BaseCommand):
         if settings.DEBUG:
             try:
                 asyncio.run(start_polling())
-                self.stdout.write(self.style.SUCCESS("Bot debug rejimida ishga tushdi!"))
+                self.stdout.write(self.style.WARNING("Bot debug rejimida ishga tushyapti!"))
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Ishga tushishda hatolik: {e}"))
         else:

@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from adminpage.admin import superadmin_site, staffadmin_site
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('superadmin/', superadmin_site.urls),
+    path('staffadmin/', staffadmin_site.urls),
 ]

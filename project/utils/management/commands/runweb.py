@@ -19,7 +19,7 @@ class Command(BaseCommand):
                 check=True
             )
 
-            return*
+            return
         
         cmd = [
             "gunicorn",

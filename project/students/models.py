@@ -1,3 +1,16 @@
 from django.db import models
 
-# Create your models here.
+class Students(models.Model):
+    full_name = models.CharField(max_length=256, verbose_name="O'quvchining ismi")
+    _class = models.ForeignKey(
+        "classes.Classes",
+        on_delete=models.CASCADE,
+        verbose_name="O'quvchining sinfi",
+        related_name='sinfi'
+    )
+    status = models.CharField(max_length=20, verbose_name="Statusi", blank=True, null=True)
+    sababi = models.TextField(verbose_name="Sababi", blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "O'quvchi"
+        verbose_name_plural = "O'quvchilar"
