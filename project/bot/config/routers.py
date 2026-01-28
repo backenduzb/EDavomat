@@ -1,4 +1,4 @@
-from handlers import start
+from bot.handlers import start
 
 ROUTERS = [
     start.router

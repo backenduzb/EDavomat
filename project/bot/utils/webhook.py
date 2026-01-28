@@ -1,5 +1,5 @@
 from aiogram import Bot
-from config.settings import (
+from bot.config.settings import (
     WEBHOOK_BASE_URL,
     WEBHOOK_SECRET
 )

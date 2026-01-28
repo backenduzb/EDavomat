@@ -15,10 +15,11 @@ class Command(BaseCommand):
                 self.style.WARNING("Debug rejimda ishga tushayapti")
             )
             subprocess.run(
-                [sys.executable, "manage.py", "runserver"],
+                [sys.executable, "manage.py", "runserver", "0.0.0.0:8000"],
                 check=True
             )
-            return
+
+            return*
         
         cmd = [
             "gunicorn",

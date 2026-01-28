@@ -1,8 +1,10 @@
-# Django migratsiyalarini yasaymiz
-python manage.py makemigrations --no-input
-python manage.py migrate --no-input
+#!/bin/sh
+set -e
 
-# Admin yaratish
-python manage.py createadmin
+if [ "$RUN_MODE" = "web" ]; then
+  python manage.py makemigrations --no-input
+  python manage.py migrate --no-input
+  python manage.py createadmin
+fi
 
-# Loyihani run qilamiz
+exec "$@"
