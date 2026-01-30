@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
+from django.templatetags.static import static
 
 class SuperAdmin(AdminSite):
     site_header = "Super admin"
@@ -13,9 +14,12 @@ class StaffAdmin(AdminSite):
     site_title = "Maktab admin"
     index_title = "Boshqaruv"
     
+    index_template = "staffadmin/index.html"
+    
     def has_permission(self, request):
         return request.user.is_active and (request.user.is_staff or request.user.is_superuser)
-
+    
+        
 superadmin_site = SuperAdmin(name="superadmin")
 staffadmin_site = StaffAdmin(name="staffadmin")
 
