@@ -22,9 +22,7 @@ class StaffAdmin(AdminSite):
     index_template = "staffadmin/index.html"
 
     def has_permission(self, request):
-        return request.user.is_active and (
-            request.user.is_staff or request.user.is_superuser
-        )
+        return request.user.is_active and request.user.is_staff and not request.user.is_superuser
 
     def index(self, request, extra_context=None):
         extra_context = extra_context or {}

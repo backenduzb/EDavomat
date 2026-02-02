@@ -1,14 +1,24 @@
-from django.db.models import Count
 from django.contrib import admin
-from adminpage.admin import (
-    staffadmin_site
-)
-from .models import (
-    Classes, ClassName,
-    Statistics
-)
+from django.db.models import Count
 
-@admin.register(Statistics, site=staffadmin_site)
+from adminpage.admin import staffadmin_site
+from .models import Classes, ClassName, Statistics
+from students.admin import StudentsInline
+
+@admin.register(Classes, site=staffadmin_site)
+class ClassesRegister(admin.ModelAdmin):
+    inlines = [StudentsInline]
+    readonly_fields = ("school",)
+    list_display = ("name", "teacher_full_name", "teacher_telegram_id", "updated")
+    search_fields = ("name__name", "teacher_full_name", "teacher_telegram_id")
+
+@admin.register(ClassName, site=staffadmin_site)
+class ClassNameRegister(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
+
+
+@admin.register(Statistics)
 class StatisticsRegister(admin.ModelAdmin):
     list_display = ("created_at", "_class", "reason_students_count", "no_reason_students_count")
 
@@ -27,13 +37,8 @@ class StatisticsRegister(admin.ModelAdmin):
     def no_reason_students_count(self, obj):
         return obj.noreason_cnt
 
-@admin.register(Classes, site=staffadmin_site)
-class ClassesRegister(admin.ModelAdmin):
-    readonly_fields = ('school', )
-    list_display = ['name', 'teacher_full_name', 'teacher_telegram_id', 'updated']
-    search_fields = ['name', 'teacher_full_name', 'teacher_telegam_id']
-    
-@admin.register(ClassName, site=staffadmin_site)
-class ClassNameRegister(admin.ModelAdmin):
-    list_display = ['name']
-    search_fields = ['name']
+class ClassesInline(admin.TabularInline):
+    model = Classes
+    extra = 0
+    fields = ('name', )
+    show_change_link = True

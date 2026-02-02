@@ -10,12 +10,6 @@ class School(models.Model):
         verbose_name="Maktab direktori profili",
         related_name="admins",
     )
-    classes = models.ManyToManyField(
-        "classes.Classes",
-        verbose_name="Maktabdagi sinflar",
-        related_name="sinflar",
-        blank=True,
-    )
     
     def __str__(self):
         return str(self.name)

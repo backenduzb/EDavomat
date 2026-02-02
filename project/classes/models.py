@@ -36,11 +36,11 @@ class Classes(models.Model):
     name = models.ForeignKey(
         ClassName,
         on_delete=models.CASCADE,
-        verbose_name="Sing nomi",
+        verbose_name="Sinf nomi",
     )
     school = models.ForeignKey(
         "schools.School",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Maktab",
         related_name="maktab",
         null=True,
@@ -56,9 +56,6 @@ class Classes(models.Model):
         verbose_name="Sinf rahbar telegram idsi",
         null=True,
         blank=True,
-    )
-    students = models.ManyToManyField(
-        "students.Students", verbose_name="O'quvchilar", related_name="oquvchi"
     )
 
     def __str__(self):

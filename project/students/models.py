@@ -4,9 +4,11 @@ class Students(models.Model):
     full_name = models.CharField(max_length=256, verbose_name="O'quvchining ismi")
     _class = models.ForeignKey(
         "classes.Classes",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="O'quvchining sinfi",
-        related_name='sinfi'
+        related_name='students',
+        null=True,
+        blank=True,
     )
     status = models.CharField(max_length=20, verbose_name="Statusi", blank=True, null=True)
     sababi = models.TextField(verbose_name="Sababi", blank=True, null=True)
