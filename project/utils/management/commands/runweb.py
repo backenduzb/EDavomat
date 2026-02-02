@@ -1,7 +1,9 @@
-from django.core.management.base import BaseCommand
-from django.conf import settings
 import subprocess
 import sys
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+
 
 class Command(BaseCommand):
     help = "Loyihani ishga tushurish"
@@ -14,12 +16,13 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING("Debug rejimda ishga tushayapti"))
 
             try:
-                subprocess.run([sys.executable, "manage.py", "makemigrations"], check=True)
-                subprocess.run([sys.executable, "manage.py", "migrate"], check=True)
-                
                 subprocess.run(
-                    [sys.executable, "manage.py", "runserver", bind],
-                    check=True
+                    [sys.executable, "manage.py", "makemigrations"], check=True
+                )
+                subprocess.run([sys.executable, "manage.py", "migrate"], check=True)
+
+                subprocess.run(
+                    [sys.executable, "manage.py", "runserver", bind], check=True
                 )
             except:
                 pass
@@ -28,8 +31,10 @@ class Command(BaseCommand):
         cmd = [
             "gunicorn",
             "config.wsgi:application",
-            "--bind", bind,
-            "--workers", str(workers),
+            "--bind",
+            bind,
+            "--workers",
+            str(workers),
         ]
 
         try:

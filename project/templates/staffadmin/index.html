@@ -1,7 +1,12 @@
-{% extends "admin/index.html" %}
-
-{% block content %}
-  <div class="p-3">
-      
-  </div>
+{% extends "admin/index.html" %} 
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a class="font-">{{ school_name }}</a>
+</div>
 {% endblock %}
+{% block content %}
+<div class="p-3">
+    <p>{{ others.text }}</p>
+</div>
+{% endblock %}
+

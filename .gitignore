@@ -43,3 +43,6 @@ pip-selfcheck.json
 
 # Database files
 **.sqlite3
+
+# Frontend modules
+**/node_modules
