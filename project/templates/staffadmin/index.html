@@ -1,12 +1,57 @@
-{% extends "admin/index.html" %} 
-{% block breadcrumbs %}
-<div class="breadcrumbs">
-    <a class="font-">{{ school_name }}</a>
+{% extends "admin/index.html" %} {% load static %} {% block breadcrumbs %}
+<link rel="stylesheet" href="{% static 'staffadmin/dashboard.css' %}" />
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><h3>{{ school_name }}</h3></li>
+</ol>
+<div class="extra-actions">
+    {% csrf_token %}
+    <a href="#" id="upload-excel-btn" class="btn btn-success">
+        <i class="fas fa-upload"></i> O'quvchilarni yuklash
+    </a>
+</div>
+{% endblock %} {% block content %}
+<div class="p-3" style="width: 100%; height: auto">
+    <div class="stats-container">
+        <div class="stats">
+            <div class="stats-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <p>Jami o'quvchilar soni</p>
+            <div class="text">
+                <h1>{{ school_statisticks.0.students_count }}</h1>
+            </div>
+            <h3>100%</h3>
+        </div>
+        <div class="stats">
+            <div class="stats-icon">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <p>Jami sinflar soni</p>
+            <div class="text">
+                <h1>{{ school_statisticks.0.classes_count }}</h1>
+            </div>
+            <h3>100%</h3>
+        </div>
+        <div class="stats">
+            <div class="stats-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <p>Jami kelganlar soni</p>
+            <div class="text">
+                <h1>{{ school_statisticks.0.kelganlar }}</h1>
+            </div>
+            <h3>{{ school_statisticks.0.km_protcent }}</h3>
+        </div>
+        <div class="stats">
+            <div class="stats-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <p>Jami kelmaganlar soni</p>
+            <div class="text">
+                <h1>{{ school_statisticks.0.kelmaganlar }}</h1>
+            </div>
+            <h3>{{ school_statisticks.0.k_protcent }}</h3>
+        </div>
+    </div>
 </div>
 {% endblock %}
-{% block content %}
-<div class="p-3">
-    <p>{{ others.text }}</p>
-</div>
-{% endblock %}
-

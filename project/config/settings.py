@@ -77,10 +77,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+
 if DEBUG:
     DATABASES = {
         'default': {

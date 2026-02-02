@@ -1,6 +1,13 @@
+from tabnanny import verbose
 from django.db import models
 
 class Statistics(models.Model):
+    school = models.ForeignKey(
+        "schools.School",
+        verbose_name="Maktab",
+        on_delete=models.CASCADE,
+        null=True, blank=True
+    )
     reason_students = models.ManyToManyField(
         "students.Students",
         verbose_name="Sababli kelgan o'quvchilar",
@@ -19,7 +26,6 @@ class Statistics(models.Model):
     class Meta:
         verbose_name = "Statistik"
         verbose_name_plural = "Statislikalar"
-
 
 class ClassName(models.Model):
     name = models.CharField(max_length=64, unique=True)
