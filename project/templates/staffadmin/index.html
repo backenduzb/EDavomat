@@ -50,7 +50,7 @@
             <div class="text">
                 <h1>{{ school_statisticks.kelganlar }}</h1>
             </div>
-            <h3>{{ school_statisticks.km_protcent }}</h3>
+            <h3>{{ school_statisticks.km_protcent }}%</h3>
         </div>
         <div class="stats">
             <div class="stats-icon">
@@ -60,18 +60,21 @@
             <div class="text">
                 <h1>{{ school_statisticks.kelmaganlar }}</h1>
             </div>
-            <h3>{{ school_statisticks.k_protcent }}</h3>
+            <h3>{{ school_statisticks.k_protcent }}%</h3>
         </div>
     </div>
     <div class="diagram-container">
         <div class="days-info">
-            <h4>Kelmaganlar tahlili</h4>
+            <h4>Oylik kelmaganlar tahlili</h4>
             <canvas id="attendanceLineChart" class="diagram"></canvas>
         </div>
         <div class="classes-info">
-            
+            <h4>Umumiy</h4>
+            <canvas id="classesRoundedChart" class="class-stats"></canvas>
         </div>
     </div>
+    {{ school_statisticks.km_protcent|json_script:"rounded_diagram_kelmagan"}}
+    {{ school_statisticks.k_protcent|json_script:"rounded_diagram_kelgan"}}
     {{ diagram_info|json_script:"diagram-data" }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'staffadmin/dashboard.js' %}"></script>

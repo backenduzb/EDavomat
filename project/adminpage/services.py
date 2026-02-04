@@ -8,14 +8,19 @@ from django.shortcuts import get_object_or_404
 from schools.models import School
 from students.models import Students
 
-def cleasses_status() -> dict:
+def get_classes_status(school) -> dict:
+    
+    classes = Classes.objects.filter(school=school)
+    
+    return {
+        "classes_count": classes.count(),
+        "updated_classes": classes.filter(updated=True).count(),
+    }
     
 
-def statistics_detail(request) -> dict:
-    school = get_object_or_404(School, admin=request.user)
+def statistics_detail(school) -> dict:
 
-    days = int(request.GET.get("days", 7))
-    start = date.today() - timedelta(days=days - 1)
+    start = date.today() - timedelta(days=30)
     end = date.today()
 
     qs = (
@@ -61,12 +66,15 @@ def dashboard_data(request) -> dict:
     )
     kelganlar = students_count - kelmaganlar
     if students_count > 0:
-        k_protcent = f"{((100 / students_count) * kelganlar):.1f}%"
-        km_protcent = f"{((100 / students_count) * kelmaganlar):.1f}%"
+        k_protcent = f"{((100 / students_count) * kelganlar):.1f}"
+        km_protcent = f"{((100 / students_count) * kelmaganlar):.1f}"
     else:
-        k_protcent = "0%"
-        km_protcent = "0%"
-    diagram_data = statistics_detail(request)
+        k_protcent = "0"
+        km_protcent = "0"
+        
+    diagram_data = statistics_detail(school)
+    classes_data = get_classes_status(school)
+    
     return {
         "school_name": school.name,
         "school_statisticks": {
@@ -78,4 +86,5 @@ def dashboard_data(request) -> dict:
             "km_protcent": km_protcent,
         },
         "diagram_info": diagram_data,
+        "classes_data": classes_data
     }

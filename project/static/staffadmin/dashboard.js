@@ -56,4 +56,54 @@ function renderAttendanceChart() {
     });
 }
 
+function classesRoundedChart() {
+  const ctx = document.getElementById('classesRoundedChart');
+
+  const kelmagan = Number(JSON.parse(
+    document.getElementById("rounded_diagram_kelmagan").textContent
+  ));
+
+  const kelgan = Number(JSON.parse(
+    document.getElementById("rounded_diagram_kelgan").textContent
+  ));
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Kelganlar', 'Kelmaganlar'],
+      datasets: [{
+        data: [kelgan, kelmagan],
+        backgroundColor: ['#00ff99', '#f30008'],
+        borderWidth: 2,
+        borderRadius: 8,
+        borderColor: "#D3D3D3",
+        spacing: 3
+      }]
+    },
+    options: {
+      cutout: '65%',
+      plugins: {
+        legend: { position: 'bottom' },
+
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const data = context.dataset.data;
+              const total = data.reduce((a,b)=>a+b,0);
+              const value = context.raw;
+
+              const percent = ((value / total) * 100).toFixed(1);
+
+              return `${context.label}: ${percent}%`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+
+classesRoundedChart();
 renderAttendanceChart();
+
