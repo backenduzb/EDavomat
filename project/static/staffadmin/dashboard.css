@@ -107,6 +107,16 @@
     color: var(--icon-color);
 }
 
+.diagram-container{
+    width: 95%;
+    height: 75% !important;
+}
+
+.diagram-container canvas{
+    width: 100%;
+    height: 85% !important;
+}
+
 @media (max-width: 768px) {
     .extra-actions .btn {
         margin-top: 80px;

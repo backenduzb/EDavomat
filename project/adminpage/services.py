@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from tracemalloc import Statistic
 
 from classes.models import Classes, Statistics
@@ -8,18 +8,22 @@ from students.models import Students
 
 
 def dashboard_data(request) -> dict:
-    now = datetime.now().strftime("%Y-%m-%d")
+    now = date.today()
     school = get_object_or_404(School, admin=request.user)
     classes_count = Classes.objects.filter(school=school).count()
     students_count = Students.objects.filter(_class__school=school).count()
-    statistics = Statistics.objects.filter(created_at=now, school=school).first()
+    statistics, _ = Statistics.objects.get_or_create(created_at=now, school=school)
     kelmaganlar = (
         statistics.reason_students.count() + statistics.no_reason_students.count()
     )
     kelganlar = students_count - kelmaganlar
-    k_protcent = f"{((100 / students_count) * kelganlar):.1f}%"
-    km_protcent = f"{((100 / students_count) * kelmaganlar):.1f}%" 
-    
+    if students_count > 0:
+        k_protcent = f"{((100 / students_count) * kelganlar):.1f}%"
+        km_protcent = f"{((100 / students_count) * kelmaganlar):.1f}%"
+    else:
+        k_protcent = "0%"
+        km_protcent = "0%"
+
     return {
         "school_name": school.name,
         "school_statisticks": [
@@ -33,3 +37,4 @@ def dashboard_data(request) -> dict:
             }
         ],
     }
+

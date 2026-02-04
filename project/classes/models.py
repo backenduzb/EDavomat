@@ -11,19 +11,24 @@ class Statistics(models.Model):
     reason_students = models.ManyToManyField(
         "students.Students",
         verbose_name="Sababli kelgan o'quvchilar",
-        related_name="statistics_reason",
+        related_name="absence_reason_stats",
+        blank=True,
     )
     no_reason_students = models.ManyToManyField(
         "students.Students",
         verbose_name="Sababsiz kelgan o'quvchilar",
-        related_name="statistics_no_reason",
+        related_name="absence_no_reason_stats",
+        blank=True
     )
     _class = models.ForeignKey(
-        "classes.Classes", on_delete=models.CASCADE, verbose_name="Sinf"
+        "classes.Classes", on_delete=models.CASCADE, verbose_name="Sinf",null=True, blank=True
     )
-    created_at = models.DateField(auto_now_add=True, verbose_name="Yaratilingan vaqt")
+    created_at = models.DateField(verbose_name="Yaratilingan vaqt")
 
     class Meta:
+        constraints = [
+                    models.UniqueConstraint(fields=["_class", "created_at"], name="uniq_class_day")
+            ]
         verbose_name = "Statistik"
         verbose_name_plural = "Statislikalar"
 

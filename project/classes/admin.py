@@ -20,7 +20,7 @@ class ClassNameRegister(admin.ModelAdmin):
 
 @admin.register(Statistics)
 class StatisticsRegister(admin.ModelAdmin):
-    list_display = ("created_at", "_class", "reason_students_count", "no_reason_students_count")
+    list_display = ("created_at", "school","_class", "reason_students_count", "no_reason_students_count")
     readonly_fields = ('created_at',)
     def get_queryset(self, request):
         qs = super().get_queryset(request)
