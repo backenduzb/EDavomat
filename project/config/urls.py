@@ -24,7 +24,6 @@ from django.shortcuts import redirect
 urlpatterns = [
     path('superadmin/', superadmin_site.urls, name="superadmin"),
     path('staffadmin/', staffadmin_site.urls, name="staffadmin"),
-    path('', include("adminpage.urls"))
 ]
 
 if settings.DEBUG:

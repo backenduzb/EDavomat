@@ -10,7 +10,17 @@
     </a>
 </div>
 {% endblock %} {% block content %}
-<div class="p-3" style="width: 100%; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; height: auto">
+<div
+    class="p-3"
+    style="
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        height: auto;
+    "
+>
     <div class="stats-container">
         <div class="stats">
             <div class="stats-icon">
@@ -18,7 +28,7 @@
             </div>
             <p>Jami o'quvchilar soni</p>
             <div class="text">
-                <h1>{{ school_statisticks.0.students_count }}</h1>
+                <h1>{{ school_statisticks.students_count }}</h1>
             </div>
             <h3>100%</h3>
         </div>
@@ -28,7 +38,7 @@
             </div>
             <p>Jami sinflar soni</p>
             <div class="text">
-                <h1>{{ school_statisticks.0.classes_count }}</h1>
+                <h1>{{ school_statisticks.classes_count }}</h1>
             </div>
             <h3>100%</h3>
         </div>
@@ -38,9 +48,9 @@
             </div>
             <p>Jami kelganlar soni</p>
             <div class="text">
-                <h1>{{ school_statisticks.0.kelganlar }}</h1>
+                <h1>{{ school_statisticks.kelganlar }}</h1>
             </div>
-            <h3>{{ school_statisticks.0.km_protcent }}</h3>
+            <h3>{{ school_statisticks.km_protcent }}</h3>
         </div>
         <div class="stats">
             <div class="stats-icon">
@@ -48,55 +58,22 @@
             </div>
             <p>Jami kelmaganlar soni</p>
             <div class="text">
-                <h1>{{ school_statisticks.0.kelmaganlar }}</h1>
+                <h1>{{ school_statisticks.kelmaganlar }}</h1>
             </div>
-            <h3>{{ school_statisticks.0.k_protcent }}</h3>
+            <h3>{{ school_statisticks.k_protcent }}</h3>
         </div>
     </div>
     <div class="diagram-container">
-        <h4 style="margin-bottom: 12px">Oxirgi 14 kun: kelmaganlar tahlili</h4>
-        <canvas id="attendanceLineChart" class="diagram"></canvas>
+        <div class="days-info">
+            <h4>Kelmaganlar tahlili</h4>
+            <canvas id="attendanceLineChart" class="diagram"></canvas>
+        </div>
+        <div class="classes-info">
+            
+        </div>
     </div>
+    {{ diagram_info|json_script:"diagram-data" }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        async function renderAttendanceChart() {
-            const res = await fetch("{% url 'statistics' %}?days=2");
-            const data = await res.json();
-
-            const ctx = document
-                .getElementById("attendanceLineChart")
-                .getContext("2d");
-
-            new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: data.labels,
-                    datasets: [
-                        {
-                            label: "Sababli kelmaganlar",
-                            data: data.reason,
-                            tension: 0.35,
-                        },
-                        {
-                            label: "Sababsiz kelmaganlar",
-                            data: data.no_reason,
-                            tension: 0.35,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: true },
-                    },
-                    scales: {
-                        y: { beginAtZero: true },
-                    },
-                },
-            });
-        }
-
-        renderAttendanceChart();
-    </script>
+    <script src="{% static 'staffadmin/dashboard.js' %}"></script>
 </div>
 {% endblock %}

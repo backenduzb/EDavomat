@@ -10,5 +10,5 @@ class StudentsInline(admin.TabularInline):
 
 @admin.register(Students, site=staffadmin_site)
 class StudentsRegister(admin.ModelAdmin):
-    list_display = ['full_name', 'status', '_class']
-    search_fields = ['full_name', 'status']
+    list_display = ['full_name', '_class']
+    search_fields = ['full_name']

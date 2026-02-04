@@ -108,10 +108,27 @@
 }
 
 .diagram-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
     width: 95%;
     height: 75% !important;
+    border: 1px solid red;
 }
 
+.diagram-container .days-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 60%;
+}
+
+.diagram-container h4{
+    font-weight: 700;
+    color: var(--icon-color);
+}
 .diagram-container canvas{
     width: 100%;
     height: 85% !important;
