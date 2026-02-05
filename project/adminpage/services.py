@@ -46,21 +46,14 @@ def get_classes_status(school, stat) -> dict:
                 "no_reason_absent": noreason_map.get(c.id, 0),
             }
         )
+        return {
+            "classes_count": classes.count(),
+            "updated_classes": classes.filter(updated=True).count(),
+            "unupdated_classes": classes.filter(updated=False).count(),
+            "classes": classes_list,
+            "has_statistics": bool(stat),
+        }
 
-    print({
-        "classes_count": classes.count(),
-        "updated_classes": classes.filter(updated=True).count(),
-        "unupdated_classes": classes.filter(updated=False).count(),
-        "classes": classes_list,
-        "has_statistics": bool(stat),
-    })
-    return {
-        "classes_count": classes.count(),
-        "updated_classes": classes.filter(updated=True).count(),
-        "unupdated_classes": classes.filter(updated=False).count(),
-        "classes": classes_list,
-        "has_statistics": bool(stat),
-    }
 
 def statistics_detail(school) -> dict:
 

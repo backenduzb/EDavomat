@@ -1,5 +1,6 @@
 from django.contrib import admin
 from adminpage.admin import staffadmin_site
+from adminpage.filters import get_staff_school
 from .models import Students
 from schools.models import School
 
