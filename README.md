@@ -6,14 +6,11 @@
 
 <br/>
 
-## Tech Stack
 <div align="center">
-  <img src="https://skillicons.dev/icons?i=python,django,js,ts,postgres,sqlite,docker,linux,github,ubuntu&perline=5" />
+  <img src="https://skillicons.dev/icons?i=python,django,js,html,postgres,sqlite,docker,linux,github,ubuntu&perline=10" />
 </div>
 
 <br/>
-
-## Yaratuvchi
 
 <div align="center">
 
