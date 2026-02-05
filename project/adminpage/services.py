@@ -1,23 +1,66 @@
 from datetime import date, timedelta
-from tracemalloc import Statistic
 
 from classes.models import Classes
-from .models import  Statistics
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from schools.models import School
 from students.models import Students
 
-def get_classes_status(school) -> dict:
-    
-    classes = Classes.objects.filter(school=school)
-    
+from .models import Statistics
+
+
+def get_classes_status(school, stat) -> dict:
+
+    classes = (
+        Classes.objects.filter(school=school)
+        .select_related("name")
+        .annotate(students_count=Count("students", distinct=True))
+    )
+
+    reason_map = {}
+    noreason_map = {}
+
+    if stat:
+        reason_rows = (
+            Students.objects.filter(absence_reason_stats=stat)
+            .values("_class_id")
+            .annotate(cnt=Count("id", distinct=True))
+        )
+        reason_map = {r["_class_id"]: r["cnt"] for r in reason_rows}
+
+        noreason_rows = (
+            Students.objects.filter(absence_no_reason_stats=stat)
+            .values("_class_id")
+            .annotate(cnt=Count("id", distinct=True))
+        )
+        noreason_map = {r["_class_id"]: r["cnt"] for r in noreason_rows}
+
+    classes_list = []
+    for c in classes:
+        classes_list.append(
+            {
+                "id": c.id,
+                "name": c.name.name,
+                "students_count": c.students_count,
+                "reason_absent": reason_map.get(c.id, 0),
+                "no_reason_absent": noreason_map.get(c.id, 0),
+            }
+        )
+
+    print({
+        "classes_count": classes.count(),
+        "updated_classes": classes.filter(updated=True).count(),
+        "unupdated_classes": classes.filter(updated=False).count(),
+        "classes": classes_list,
+        "has_statistics": bool(stat),
+    })
     return {
         "classes_count": classes.count(),
         "updated_classes": classes.filter(updated=True).count(),
         "unupdated_classes": classes.filter(updated=False).count(),
+        "classes": classes_list,
+        "has_statistics": bool(stat),
     }
-    
 
 def statistics_detail(school) -> dict:
 
@@ -72,10 +115,10 @@ def dashboard_data(request) -> dict:
     else:
         k_protcent = "0"
         km_protcent = "0"
-        
+
     diagram_data = statistics_detail(school)
-    classes_data = get_classes_status(school)
-    
+    classes_data = get_classes_status(school, statistics)
+
     return {
         "school_name": school.name,
         "school_statisticks": {
@@ -87,5 +130,5 @@ def dashboard_data(request) -> dict:
             "km_protcent": km_protcent,
         },
         "diagram_info": diagram_data,
-        "classes_data": classes_data
+        "classes_data": classes_data,
     }

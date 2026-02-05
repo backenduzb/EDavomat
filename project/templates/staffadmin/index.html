@@ -1,88 +1,82 @@
-{% extends "admin/index.html" %} {% load static %} {% block breadcrumbs %}
+{% extends "admin/index.html" %}
+{% load static %}
+
+{% block breadcrumbs %}
 <link rel="stylesheet" href="{% static 'staffadmin/dashboard.css' %}" />
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><h3>{{ school_name }}</h3></li>
+  <li class="breadcrumb-item"><h3>{{ school_name }}</h3></li>
 </ol>
+
 <div class="extra-actions">
-    {% csrf_token %}
-    <a href="#" id="upload-excel-btn" class="btn btn-success">
-        <i class="fas fa-upload"></i> O'quvchilarni yuklash
-    </a>
+  {% csrf_token %}
+  <a href="#" id="upload-excel-btn" class="btn btn-success">
+    <i class="fas fa-upload"></i> O'quvchilarni yuklash
+  </a>
 </div>
-{% endblock %} {% block content %}
-<div
-    class="p-3"
-    style="
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-        height: auto;
-    "
->
-    <div class="stats-container">
-        <div class="stats">
-            <div class="stats-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <p>Jami o'quvchilar soni</p>
-            <div class="text">
-                <h1>{{ school_statisticks.students_count }}</h1>
-            </div>
-            <h3>100%</h3>
-        </div>
-        <div class="stats">
-            <div class="stats-icon">
-                <i class="fas fa-chalkboard-teacher"></i>
-            </div>
-            <p>Jami sinflar soni</p>
-            <div class="text">
-                <h1>{{ school_statisticks.classes_count }}</h1>
-            </div>
-            <h3>100%</h3>
-        </div>
-        <div class="stats">
-            <div class="stats-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <p>Jami kelganlar soni</p>
-            <div class="text">
-                <h1>{{ school_statisticks.kelganlar }}</h1>
-            </div>
-            <h3>{{ school_statisticks.km_protcent }}%</h3>
-        </div>
-        <div class="stats">
-            <div class="stats-icon">
-                <i class="fas fa-times-circle"></i>
-            </div>
-            <p>Jami kelmaganlar soni</p>
-            <div class="text">
-                <h1>{{ school_statisticks.kelmaganlar }}</h1>
-            </div>
-            <h3>{{ school_statisticks.k_protcent }}%</h3>
-        </div>
+{% endblock %}
+
+{% block content %}
+<div class="p-3" style="width:100%;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;height:auto;">
+
+  <div class="stats-container">
+    <div class="stats">
+      <div class="stats-icon"><i class="fas fa-users"></i></div>
+      <p>Jami o'quvchilar soni</p>
+      <div class="text"><h1>{{ school_statisticks.students_count }}</h1></div>
+      <h3>100%</h3>
     </div>
-    <div class="diagram-container">
-        <div class="days-info">
-            <h4>Oylik kelmaganlar tahlili</h4>
-            <canvas id="attendanceLineChart" class="diagram"></canvas>
-        </div>
-        <div class="classes-info">
-            <h4 style="font-size: 18px;">Yangilanganlar</h4>
-            <canvas id="classesRoundedChart1" class="class-stats"></canvas>
-        </div>
-        <div class="classes-info">
-            <h4>Umumiy</h4>
-            <canvas id="classesRoundedChart" class="class-stats"></canvas>
-        </div>
+
+    <div class="stats">
+      <div class="stats-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+      <p>Jami sinflar soni</p>
+      <div class="text"><h1>{{ school_statisticks.classes_count }}</h1></div>
+      <h3>100%</h3>
     </div>
-    {{ classes_data.updated_classes|json_script:"updated_classes"  }}
-    {{ classes_data.unupdated_classes|json_script:"unupdated_classes" }}
-    {{ school_statisticks.km_protcent|json_script:"rounded_diagram_kelmagan"}}
-    {{ school_statisticks.k_protcent|json_script:"rounded_diagram_kelgan"}}
-    {{ diagram_info|json_script:"diagram-data" }}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static 'staffadmin/dashboard.js' %}"></script>
+
+    <div class="stats">
+      <div class="stats-icon"><i class="fas fa-check-circle"></i></div>
+      <p>Jami kelganlar soni</p>
+      <div class="text"><h1>{{ school_statisticks.kelganlar }}</h1></div>
+      <h3>{{ school_statisticks.km_protcent }}%</h3>
+    </div>
+
+    <div class="stats">
+      <div class="stats-icon"><i class="fas fa-times-circle"></i></div>
+      <p>Jami kelmaganlar soni</p>
+      <div class="text"><h1>{{ school_statisticks.kelmaganlar }}</h1></div>
+      <h3>{{ school_statisticks.k_protcent }}%</h3>
+    </div>
+  </div>
+
+  <div class="diagram-container">
+    <div class="days-info" style="height:320px;">
+      <h4>Oylik kelmaganlar tahlili</h4>
+      <canvas id="attendanceLineChart" class="diagram"></canvas>
+    </div>
+
+    <div class="classes-info" style="height:260px;">
+      <h4 style="font-size:18px;">Yangilanganlar</h4>
+      <canvas id="classesRoundedChart1" class="class-stats"></canvas>
+    </div>
+
+    <div class="classes-info" style="height:260px;">
+      <h4>Umumiy</h4>
+      <canvas id="classesRoundedChart" class="class-stats"></canvas>
+    </div>
+  </div>
+
+  <div class="diagram-container-max">
+    <div class="classes-info">
+      <h4>Sinflar bo‘yicha kelmaganlar</h4>
+      <canvas id="attendanceRowChart" class="diagram"></canvas>
+    </div>
+  </div>
+  {{ classes_data|json_script:"classes-data" }}
+  {{ diagram_info|json_script:"diagram-data" }}
+  {{ school_statisticks|json_script:"school-stats" }}
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{% static 'staffadmin/dashboard.js' %}"></script>
+
 </div>
 {% endblock %}
