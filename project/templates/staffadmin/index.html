@@ -6,13 +6,18 @@
 <ol class="breadcrumb">
   <li class="breadcrumb-item"><h3>{{ school_name }}</h3></li>
 </ol>
-
 <div class="extra-actions">
   {% csrf_token %}
+
+  <input type="file" id="excel-file" accept=".xlsx,.xls" hidden>
+
   <a href="#" id="upload-excel-btn" class="btn btn-success">
     <i class="fas fa-upload"></i> O'quvchilarni yuklash
   </a>
+
+  <div id="upload-result" style="margin-top:10px;"></div>
 </div>
+
 {% endblock %}
 
 {% block content %}

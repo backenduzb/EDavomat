@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=22&pause=900&center=true&vCenter=true&width=700&lines=E+Davomat+loyihasi+%F0%9F%91%8B;Davomat+hisoboti+bo'yicha+kichik+tizim" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=22&pause=900&center=true&vCenter=true&width=700&lines=E+Davomat+loyihasi;Davomat+hisoboti+bo'yicha+kichik+tizim" alt="Typing SVG" />
 
 </div>
 

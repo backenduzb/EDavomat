@@ -18,12 +18,12 @@ from django.urls import path, include
 from adminpage.admin import superadmin_site, staffadmin_site
 from django.conf.urls.static import static
 from django.conf import settings
-from django.shortcuts import redirect
 
 
 urlpatterns = [
     path('superadmin/', superadmin_site.urls, name="superadmin"),
     path('staffadmin/', staffadmin_site.urls, name="staffadmin"),
+    path('admin/', include('adminpage.urls')),
 ]
 
 if settings.DEBUG:

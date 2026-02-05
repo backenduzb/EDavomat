@@ -148,6 +148,47 @@ function drawClassAbsenceBarChart(classesData) {
   });
 }
 
+const btn = document.getElementById("upload-excel-btn");
+const fileInput = document.getElementById("excel-file");
+const resultDiv = document.getElementById("upload-result");
+
+btn.onclick = () => fileInput.click();
+
+fileInput.onchange = async () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("school_name", "{{ school_name }}");
+
+  const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+  resultDiv.innerHTML = "⏳ Yuklanmoqda...";
+
+  try {
+    const res = await fetch("/admin/upload/", {
+      method: "POST",
+      headers: { "X-CSRFToken": csrftoken },
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.ok) {
+      resultDiv.innerHTML = "✅ Muvaffaqiyatli yuklandi!";
+      resultDiv.style.color = "green";
+    } else {
+      resultDiv.innerHTML = "❌ " + data.error;
+      resultDiv.style.color = "red";
+    }
+
+  } catch (e) {
+    resultDiv.innerHTML = "❌ Server xatosi";
+    resultDiv.style.color = "red";
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   const classesData = JSON.parse(
     document.getElementById("classes-data").textContent,
