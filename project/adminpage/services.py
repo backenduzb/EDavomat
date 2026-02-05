@@ -15,6 +15,7 @@ def get_classes_status(school) -> dict:
     return {
         "classes_count": classes.count(),
         "updated_classes": classes.filter(updated=True).count(),
+        "unupdated_classes": classes.filter(updated=False).count(),
     }
     
 

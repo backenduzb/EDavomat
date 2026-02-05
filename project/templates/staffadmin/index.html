@@ -69,10 +69,16 @@
             <canvas id="attendanceLineChart" class="diagram"></canvas>
         </div>
         <div class="classes-info">
+            <h4 style="font-size: 18px;">Yangilanganlar</h4>
+            <canvas id="classesRoundedChart1" class="class-stats"></canvas>
+        </div>
+        <div class="classes-info">
             <h4>Umumiy</h4>
             <canvas id="classesRoundedChart" class="class-stats"></canvas>
         </div>
     </div>
+    {{ classes_data.updated_classes|json_script:"updated_classes"  }}
+    {{ classes_data.unupdated_classes|json_script:"unupdated_classes" }}
     {{ school_statisticks.km_protcent|json_script:"rounded_diagram_kelmagan"}}
     {{ school_statisticks.k_protcent|json_script:"rounded_diagram_kelgan"}}
     {{ diagram_info|json_script:"diagram-data" }}
