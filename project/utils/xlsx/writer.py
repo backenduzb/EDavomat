@@ -1,14 +1,11 @@
 import openpyxl as pyxl
+from io import BytesIO
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
-from django.utils import timezone
+from adminpage.models import Statistics  
 
-from adminpage.models import Statistics
-from students.models import Students
+def write_excel(stat_id: int, file_path: str | None = None, in_memory: bool = False):
 
-
-def write_excel(stat_id: int, file_path: str | None = None):
-    
     stat = (
         Statistics.objects
         .select_related("school")
@@ -21,31 +18,17 @@ def write_excel(stat_id: int, file_path: str | None = None):
     reason_qs = (
         stat.reason_students
         .select_related("_class__name")
-        .all()
+        .only("id", "full_name", "sababi", "_class__id", "_class__name__name")
     )
     no_reason_qs = (
         stat.no_reason_students
         .select_related("_class__name")
-        .all()
+        .only("id", "full_name", "sababi", "_class__id", "_class__name__name")
     )
 
-    rows = []
-
-    for s in reason_qs:
-        rows.append((
-            s.full_name,
-            (s._class.name.name if s._class and s._class.name else "-"),
-            "Sababli",
-            (s.sababi or "-"),
-        ))
-
-    for s in no_reason_qs:
-        rows.append((
-            s.full_name,
-            (s._class.name.name if s._class and s._class.name else "-"),
-            "Sababsiz",
-            (s.sababi or "-"),
-        ))
+    reason_cnt = reason_qs.count()
+    no_reason_cnt = no_reason_qs.count()
+    total = reason_cnt + no_reason_cnt
 
     wb = pyxl.Workbook()
     ws = wb.active
@@ -60,11 +43,11 @@ def write_excel(stat_id: int, file_path: str | None = None):
     header_font = Font(size=11, bold=True, color="FFFFFF")
     body_font = Font(size=11, color="111111")
 
-    title_fill = PatternFill("solid", fgColor="0F172A")   
-    header_fill = PatternFill("solid", fgColor="16A34A")  
-    alt_fill = PatternFill("solid", fgColor="F1F5F9")     
-    status_reason_fill = PatternFill("solid", fgColor="DCFCE7")   
-    status_noreason_fill = PatternFill("solid", fgColor="FEE2E2") 
+    title_fill = PatternFill("solid", fgColor="0F172A")
+    header_fill = PatternFill("solid", fgColor="16A34A")
+    alt_fill = PatternFill("solid", fgColor="F1F5F9")
+    status_reason_fill = PatternFill("solid", fgColor="DCFCE7")
+    status_noreason_fill = PatternFill("solid", fgColor="FEE2E2")
 
     center = Alignment(horizontal="center", vertical="center", wrap_text=True)
     left = Alignment(horizontal="left", vertical="center", wrap_text=True)
@@ -94,32 +77,8 @@ def write_excel(stat_id: int, file_path: str | None = None):
     ws.row_dimensions[header_row].height = 22
 
     start_row = header_row + 1
-    for i, (full_name, class_name, status, reason_text) in enumerate(rows, start=1):
-        r = start_row + (i - 1)
 
-        values = [i, full_name, class_name, status, reason_text, day_str]
-        for col, val in enumerate(values, start=1):
-            cell = ws.cell(row=r, column=col, value=val)
-            cell.font = body_font
-            cell.border = border
-
-            if col in (1, 3, 4, 6):
-                cell.alignment = center
-            else:
-                cell.alignment = left
-
-            if i % 2 == 0:
-                cell.fill = alt_fill
-
-            if col == 4:
-                if status == "Sababli":
-                    cell.fill = status_reason_fill
-                else:
-                    cell.fill = status_noreason_fill
-
-        ws.row_dimensions[r].height = 20
-
-    if not rows:
+    if total == 0:
         r = start_row
         ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=len(columns))
         cell = ws.cell(row=r, column=1, value="Bu sana uchun kelmaganlar topilmadi.")
@@ -127,12 +86,70 @@ def write_excel(stat_id: int, file_path: str | None = None):
         cell.font = Font(size=12, bold=True, color="334155")
         ws.row_dimensions[r].height = 24
 
-    ws.freeze_panes = ws["A4"]
+        ws.freeze_panes = ws["A4"]
+        ws.auto_filter.ref = f"A{header_row}:F{start_row}"
+    else:
+        i = 0
+        for s in reason_qs.iterator(chunk_size=2000):
+            i += 1
+            r = start_row + (i - 1)
 
-    ws.auto_filter.ref = f"A{header_row}:F{max(start_row, start_row + len(rows) - 1)}"
+            class_name = "-"
+            if getattr(s, "_class", None) and getattr(s._class, "name", None):
+                class_name = s._class.name.name or "-"
+
+            values = [i, s.full_name, class_name, "Sababli", (s.sababi or "-"), day_str]
+            for col, val in enumerate(values, start=1):
+                cell = ws.cell(row=r, column=col, value=val)
+                cell.font = body_font
+                cell.border = border
+                cell.alignment = center if col in (1, 3, 4, 6) else left
+
+                if i % 2 == 0:
+                    cell.fill = alt_fill
+
+                if col == 4:
+                    cell.fill = status_reason_fill
+
+            ws.row_dimensions[r].height = 20
+
+        for s in no_reason_qs.iterator(chunk_size=2000):
+            i += 1
+            r = start_row + (i - 1)
+
+            class_name = "-"
+            if getattr(s, "_class", None) and getattr(s._class, "name", None):
+                class_name = s._class.name.name or "-"
+
+            values = [i, s.full_name, class_name, "Sababsiz", (s.sababi or "-"), day_str]
+            for col, val in enumerate(values, start=1):
+                cell = ws.cell(row=r, column=col, value=val)
+                cell.font = body_font
+                cell.border = border
+                cell.alignment = center if col in (1, 3, 4, 6) else left
+
+                if i % 2 == 0:
+                    cell.fill = alt_fill
+
+                if col == 4:
+                    cell.fill = status_noreason_fill
+
+            ws.row_dimensions[r].height = 20
+
+        ws.freeze_panes = ws["A4"]
+        last_row = start_row + total - 1
+        ws.auto_filter.ref = f"A{header_row}:F{last_row}"
+
+    safe_name = f"kelmaganlar_{school_name}_{day_str}.xlsx".replace(" ", "_").replace("/", "-")
+
+    if in_memory:
+        buf = BytesIO()
+        wb.save(buf)
+        buf.seek(0)
+        return buf, total, safe_name
 
     if file_path is None:
-        file_path = f"kelmaganlar_{school_name}_{day_str}.xlsx".replace(" ", "_").replace("/", "-")
+        file_path = safe_name
 
     wb.save(file_path)
-    return file_path, len(rows)
+    return file_path, total

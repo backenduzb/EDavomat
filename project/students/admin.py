@@ -26,6 +26,7 @@ class StudentsRegister(admin.ModelAdmin):
             return qs.filter(_class__school=school)
     
         return qs.none()
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "_class" and not request.user.is_superuser:
             school = get_staff_school(request)

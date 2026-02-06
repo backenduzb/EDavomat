@@ -26,7 +26,7 @@ class Statistics(models.Model):
     
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["school", "created_at"], name="uniq_class_day")
+            models.UniqueConstraint(fields=["school", "created_at"], name="uniq_school_day")
         ]
         verbose_name = "Statistik"
         verbose_name_plural = "Statislikalar"

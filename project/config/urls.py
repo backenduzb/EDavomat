@@ -15,10 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include
-from adminpage.admin import superadmin_site, staffadmin_site
+from adminpage.admin import staffadmin_site, superadmin_site
 from django.conf.urls.static import static
 from django.conf import settings
-
 
 urlpatterns = [
     path('superadmin/', superadmin_site.urls, name="superadmin"),

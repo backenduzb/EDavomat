@@ -5,8 +5,8 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from schools.models import School
 from students.models import Students
-
-from .models import Statistics
+from django.db.models import Count, Q
+from adminpage.models import Statistics
 
 
 def get_classes_status(school, stat) -> dict:
@@ -46,14 +46,13 @@ def get_classes_status(school, stat) -> dict:
                 "no_reason_absent": noreason_map.get(c.id, 0),
             }
         )
-        return {
-            "classes_count": classes.count(),
-            "updated_classes": classes.filter(updated=True).count(),
-            "unupdated_classes": classes.filter(updated=False).count(),
-            "classes": classes_list,
-            "has_statistics": bool(stat),
-        }
-
+    return {
+        "classes_count": classes.count(),
+        "updated_classes": classes.filter(updated=True).count(),
+        "unupdated_classes": classes.filter(updated=False).count(),
+        "classes": classes_list,
+        "has_statistics": bool(stat),
+    }
 
 def statistics_detail(school) -> dict:
 
@@ -98,9 +97,11 @@ def dashboard_data(request) -> dict:
     classes_count = Classes.objects.filter(school=school).count()
     students_count = Students.objects.filter(_class__school=school).count()
     statistics, _ = Statistics.objects.get_or_create(created_at=now, school=school)
+    
     kelmaganlar = (
         statistics.reason_students.count() + statistics.no_reason_students.count()
     )
+    
     kelganlar = students_count - kelmaganlar
     if students_count > 0:
         k_protcent = f"{((100 / students_count) * kelganlar):.1f}"

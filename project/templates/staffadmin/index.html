@@ -54,7 +54,7 @@
   </div>
 
   <div class="diagram-container">
-    <div class="days-info" style="height:320px;">
+    <div class="days-info" style="height:350px; width:800px;">
       <h4>Oylik kelmaganlar tahlili</h4>
       <canvas id="attendanceLineChart" class="diagram"></canvas>
     </div>
@@ -84,4 +84,5 @@
   <script src="{% static 'staffadmin/dashboard.js' %}"></script>
 
 </div>
+{{ block.super }}
 {% endblock %}
