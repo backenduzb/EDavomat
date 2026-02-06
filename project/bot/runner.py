@@ -20,6 +20,10 @@ bot = Bot(
 
 async def start_polling() -> None:
     global dp, bot
+    import logging
+    import sys
+    
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     await dp.start_polling(bot)
 
 async def start_webhook():

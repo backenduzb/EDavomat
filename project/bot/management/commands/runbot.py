@@ -9,13 +9,13 @@ class Command(BaseCommand):
         from bot.runner import start_polling, start_webhook
         if settings.DEBUG:
             try:
-                asyncio.run(start_polling())
                 self.stdout.write(self.style.WARNING("Bot debug rejimida ishga tushyapti!"))
+                asyncio.run(start_polling())
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Ishga tushishda hatolik: {e}"))
         else:
             try:
-                asyncio.run(start_webhook())
                 self.stdout.write(self.style.SUCCESS("Bot muvofaqiyatli ishga tushdi!"))
+                asyncio.run(start_webhook())
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Ishga tushishda hatolik: {e}"))
