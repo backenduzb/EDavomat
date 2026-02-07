@@ -31,10 +31,10 @@ class Classes(models.Model):
         null=True,
         blank=True,
     )
-    teacher_telegram_id = models.IntegerField(
+    teacher_telegram_id = models.BigIntegerField(
         verbose_name="Sinf rahbar telegram idsi",
-        null=True,
-        blank=True,
+        null=True, blank=True,
+        db_index=True,
     )
 
     def __str__(self):

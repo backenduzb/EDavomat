@@ -1,21 +1,14 @@
+from asgiref.sync import sync_to_async
 from channels.models.admins import BotAdmin
 from classes.models import Classes
-from asgiref.sync import sync_to_async
 
-@sync_to_async
-def check_is_admin(tg_id: int) -> bool:
-    return BotAdmin.objects.filter(admin_tg_id=tg_id).exists()
 
-@sync_to_async
-def get_admin_classes(tg_id: int) -> list:
-    admin = BotAdmin.objects.filter(admin_tg_id=tg_id).first()
-    if not admin:
-        return []
-    
-    classes = list(
-        Classes.objects
-        .filter(school=admin.school)
-        .values_list('name__name', flat=True)   
+@sync_to_async(thread_sensitive=False)
+def check_is_admin(tg_id: int) -> tuple:
+    teacher = (
+        Classes.objects.filter(teacher_telegram_id=tg_id)
+        .values_list("teacher_full_name", flat=True)
+        .first()
     )
-    return classes
-
+    is_admin = BotAdmin.objects.filter(admin_tg_id=tg_id).exists()
+    return (teacher is not None, is_admin, teacher)
