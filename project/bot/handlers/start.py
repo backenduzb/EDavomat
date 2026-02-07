@@ -1,6 +1,6 @@
 from aiogram import types, Router, F
 from bot.database.admin import check_is_admin
-from bot.keyboards.reply.buttons import classes_buttons
+from bot.keyboards.reply.buttons import classes_buttons, get_students_by_techer_buttons
 from aiogram.fsm.context import FSMContext
 from bot.states.admin import AdminUpdatingClasses
 from bot.states.teacher import TeacherUpdateState
@@ -23,7 +23,7 @@ async def start(message: types.Message, state: FSMContext):
         if is_teacher:
             await message.answer(
                 f"Assalomu alaykum {teacher_name} davomat topshirmoqchi bolgan sinfingizni tanlang.",
-                reply_markup=await classes_buttons(message.from_user.id),
+                reply_markup=await get_students_by_techer_buttons(message.from_user.id),
             )
             await state.set_state(TeacherUpdateState.waiting_student_choice)
     else:

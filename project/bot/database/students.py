@@ -8,7 +8,6 @@ from students.models import Students
 def get_all_stundets_by_teacher(tg_id: int) -> list:
     class_ = (
         Classes.objects.filter(teacher_telegram_id=tg_id)
-        .values_list("teacher_full_name", flat=True)
         .first()
     )
     students = list(
